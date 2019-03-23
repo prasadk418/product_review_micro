@@ -1,0 +1,1 @@
+insert into review values(999,'Mobiles review',1000, 4);

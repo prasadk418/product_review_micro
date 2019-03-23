@@ -1,0 +1,1 @@
+insert into product values(1000,'Mobiles',15,'Collpad Mobiles');
