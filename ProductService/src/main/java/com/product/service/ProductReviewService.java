@@ -14,11 +14,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import com.netflix.discovery.DiscoveryClient;
 import com.product.domain.Review;
 import com.product.exceptions.OperationFailed;
 import com.product.exceptions.ReviewNotFoundException;
-import com.product.util.LoadProperties;
+import com.product.feign.ReviewServiceFeignClient;
 import com.product.util.ProductUtil;
 
 @Service
@@ -32,6 +31,9 @@ public class ProductReviewService {
 	
 	@Value("${product.review.reviewservicename}")
 	private String serviceName;
+	
+	@Autowired
+	private ReviewServiceFeignClient reviewClient;
 
 	//private String REVIEW_SERVICE_URL=productUtil.buildUrl();
 	
@@ -122,8 +124,8 @@ public class ProductReviewService {
 	@SuppressWarnings("unchecked")
 	public List<Review> getProductReviews(Integer productId)
 			throws RestClientException, ReviewNotFoundException {
-		List<Review> reviews = restTemplate
-				.getForObject(productUtil.buildUrl(serviceName) + "/" + productId + "/reviews", List.class);		
+		List<Review> reviews =reviewClient.getProductReviews(productId); 
+				//restTemplate.getForObject(productUtil.buildUrl(serviceName) + "/" + productId + "/reviews", List.class);		
 		return reviews;
 	}
 }
