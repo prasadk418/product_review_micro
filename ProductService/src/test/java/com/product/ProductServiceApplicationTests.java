@@ -5,6 +5,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -18,6 +19,7 @@ import org.springframework.util.Assert;
 
 import com.product.domain.Product;
 import com.product.domain.Review;
+import com.product.feign.ReviewServiceFeignClient;
 
 
 @RunWith(SpringRunner.class)
@@ -31,11 +33,14 @@ public class ProductServiceApplicationTests {
 	private String SERVER_NAME="localhost";
 	
 	
-	TestRestTemplate restTemplate=new TestRestTemplate();
+	TestRestTemplate restTemplate=new TestRestTemplate();	
 	HttpHeaders headers=new HttpHeaders();
 	
 	Product product;
 	Review review;
+	
+	@Autowired
+	private ReviewServiceFeignClient reviewClient;
 	
 	@Before
 	public void init(){
@@ -46,7 +51,7 @@ public class ProductServiceApplicationTests {
 	@Test
 	public void contextLoads() {
 	}
-	
+	/*
 	@Test
 	public void getProductDetails(){
 		
@@ -97,35 +102,40 @@ public class ProductServiceApplicationTests {
 		Assert.isTrue(response.getStatusCode().equals(HttpStatus.NOT_FOUND));
 				
 	}
-	
+	*/
 	@Test
 	public void createProductReview(){					
 		HttpEntity<Review> reviewEntity=new HttpEntity<Review>(review);
 		ResponseEntity<Review> reviewResponse=restTemplate.exchange(buildUrl("products/2/reviews"), HttpMethod.POST , reviewEntity, Review.class);
-				
-		Assert.isTrue(reviewResponse.getStatusCode().equals(HttpStatus.CREATED));		
+				System.out.println(reviewResponse.getBody().getReviewId());
+		Assert.isTrue(reviewResponse.getStatusCode().equals(HttpStatus.CREATED));
+		Assert.isTrue(reviewResponse != null);
 		
-	}
+	}/*
 	
 	@Test
 	public void updateProductReview(){					
-		HttpEntity<Review> reviewEntity=new HttpEntity<Review>(review);
-		ResponseEntity<Review> reviewResponse=restTemplate.exchange(buildUrl("products/2/reviews"), HttpMethod.POST , reviewEntity, Review.class);
+		//HttpEntity<Review> reviewEntity=new HttpEntity<Review>(review);
+		review.setDescription("Updated-description");
+		Integer reviewResponse=reviewClient.updateReview(2, 100, review);
+				//restTemplate.exchange(buildUrl("products/2/reviews"), HttpMethod.POST , reviewEntity, Review.class);
 				
-		Assert.isTrue(reviewResponse.getStatusCode().equals(HttpStatus.CREATED));		
+		Assert.isTrue(reviewResponse !=null);		
 		
 	}
 	
 	@Test
 	public void deleteProductReview(){					
 		HttpEntity<Review> reviewEntity=new HttpEntity<Review>(review);
-		ResponseEntity<Review> reviewResponse=restTemplate.exchange(buildUrl("products/2/reviews"), HttpMethod.POST , reviewEntity, Review.class);
+		//ResponseEntity<Review> reviewResponse=restTemplate.exchange(buildUrl("products/2/reviews"), HttpMethod.POST , reviewEntity, Review.class);
+		reviewClient.deleteProductReview(2, 100);
 				
-		Assert.isTrue(reviewResponse.getStatusCode().equals(HttpStatus.CREATED));		
+		//Assert.isTrue(reviewResponse.getStatusCode().equals(HttpStatus.CREATED));		
 		
-	}
+	}*/
 	public String buildUrl(String url){
 		return PROTOCOL+"://"+SERVER_NAME+":"+port+url; 
 	}
 
+	
 }

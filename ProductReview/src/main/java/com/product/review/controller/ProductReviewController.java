@@ -41,8 +41,9 @@ public class ProductReviewController {
 	public ResponseEntity<?> createProductReview(@PathVariable("productid") Integer productID,
 			@RequestBody Review review) {
 		review.setProductId(productID);
+		System.out.println("save review  called...............");
 		Review review1 = reviewService.saveProductReview(review);
-
+		System.out.println("save review  called..............."+review1.getReviewId());
 		return new ResponseEntity<>(review1, HttpStatus.CREATED);
 	}
 

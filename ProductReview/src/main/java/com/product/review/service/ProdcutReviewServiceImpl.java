@@ -29,7 +29,7 @@ public class ProdcutReviewServiceImpl implements ProdcutReviewService {
 	
 	@Override
 	public Review saveProductReview(Review review) {
-		getReviewById(review.getReviewId());
+		
 		Review review1=reviewRepository.save(review);
 		if(review1 == null){
 			throw new OperationNotPerformed("Data not inserted into  DB.");
@@ -39,6 +39,7 @@ public class ProdcutReviewServiceImpl implements ProdcutReviewService {
 
 	@Override
 	public Review updateProductReview(Review review) {
+		getReviewById(review.getReviewId());
 		return reviewRepository.save(review);				
 	}
 	
