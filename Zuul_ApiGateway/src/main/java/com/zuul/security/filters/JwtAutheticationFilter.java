@@ -39,17 +39,18 @@ public class JwtAutheticationFilter extends UsernamePasswordAuthenticationFilter
 			throws AuthenticationException {
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
+		System.out.println("---"+username);
 		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username,
 				password);
-
+		setDetails(request, authenticationToken);
 		return authenticationManager.authenticate(authenticationToken);
 	}
 
 	@Override
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-			FilterChain filterChain, Authentication authentication) {
+			FilterChain filterChain, Authentication authentication) {System.out.println("success--auth");
 		User user = ((User) authentication.getPrincipal());
-
+System.out.println("*****"+user.getUsername());
 		List<String> roles = user.getAuthorities().stream().map(GrantedAuthority::getAuthority)
 				.collect(Collectors.toList());
 
